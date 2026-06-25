@@ -26,6 +26,10 @@ The corpus is the boundary between the two phases. Phase A produces it. Phase B 
 
 The corpus contains several kinds of entities. The list below is the short version.
 
+![Phase A builds the corpus; Phase B generates the landing zone from it](images/corpus.png)
+
+*The corpus is the boundary between the two phases. In Phase A, Merlin’s team feeds an LLM engine from books, compliance frameworks, FAST, and Google documentation, then reviews and tests its output into the corpus — section schemas, output templates, compliance mappings, validators. In Phase B, the architect turns configuration into a specification and then Terraform, documentation, and a scorecard, with no LLM in the loop.*
+
 - **Section schemas.** JSON files that define what the architect can configure for one part of the landing zone — the fields, their types, and the defaults that kick in if the architect leaves them alone.
 - **Output templates.** Jinja2 templates that produce the files the engine emits: Terraform variables, Mermaid architecture diagrams, operator-facing documentation.
 - **Compliance mappings.** One JSON file per framework. Each file translates a regulatory regime into concrete spec requirements — allowed regions, restriction levels, rotation cadences, retention floors, and so on.
@@ -54,6 +58,10 @@ The entry that lands in `configuration/compliance_mappings/hipaa.json`:
   "reference": "45 CFR 164.530(j)"
 }
 ```
+
+![Tracing the HIPAA 6-year retention rule from regulation to generated Terraform](images/d2.png)
+
+*One rule, end to end: 45 CFR §164.530(j) becomes a Phase A mapping (`log_retention.default_retention_days`, `minimum_value: 2190`), which the Phase B render writes into `08_logging_monitoring.tfvars` as `default_retention_days = 2190`.*
 
 **Phase B.** An architect opens the wizard at [app.merlin-studio.cloud](https://app.merlin-studio.cloud) and ticks HIPAA in the compliance section. Three things then happen.
 
